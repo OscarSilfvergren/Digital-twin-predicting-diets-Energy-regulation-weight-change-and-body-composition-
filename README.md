@@ -1,4 +1,4 @@
-# Digital twin predicting diets Energy regulation weight change and body composition
+# Digital twin predicting diets: Energy regulation weight change and body composition
 Oscar Arrestam
 
 Supervisors: Christian Simonsson, Mattias Ekstedt
