@@ -1,0 +1,254 @@
+********** MODEL NAME
+ModelMetabolismIndividualmeals
+
+********** MODEL NOTES
+
+********** MODEL STATES
+d/dt(Stomach_Carbohydrates)     = (carb_flow)                - (Stomach_CarbohydratesBreakdown)
+d/dt(Stomach_Protein)           = (protein_flow)             - (Protein_CarbohydratesBreakdown)
+d/dt(Stomach_Lipid)             = (lipids_flow)              - (Lipid_CarbohydratesBreakdown)
+d/dt(Intestines_Carbohydrates)  = (Stomach_CarbohydratesBreakdown)         - (Carbohydrates_Intestines_out)
+d/dt(Intestines_Protein)        = (Protein_CarbohydratesBreakdown)               - (Protein_Intestines_out)
+d/dt(Intestines_Lipid)          = (Lipid_CarbohydratesBreakdown)                - (Lipids_Intestines_out)
+
+d/dt(Chylomicrons_plasma) = (Lipids_Intestines_out)                                                    - (Chylomicrons_PlasmaToLiver + Chylomicrons_PlasmaToAdipocytes)
+d/dt(Glucose_Plasma)    = (Carbohydrates_Intestines_out + EGP)                                         - (U_ii + U_idm + U_idf + U_il)
+d/dt(AminoAcids_Plasma) = (Protein_Intestines_out)                                                     - (AminoAcids_PlasmaToPyruvate_Liver + AminoAcids_PlasmaToTCA_Liver + AminoAcids_PlasmaOut)
+d/dt(Lipids_Plasma)     = (Lipids_AdipocytessToPlasma + Lipids_LiverToPlasma)                          - (Lipids_PlasmaToLiver + Lipids_PlasmaToAdipocytes + Lipids_PlasmaOut)
+d/dt(Insulin_Plasma)    = (Insulin_LiverToPlasma)                                                      - (Insulin_PlasmaToLiver + InsulinDegradation_Plasma)
+d/dt(Ketones_Plasma)    = (KetonesLiverToPlasma)                                                       - (KetonesUsage)
+
+d/dt(Glucose_Liver)   = (U_il + Glycogenolysis + Gluconeogenesis)             - (EGP_Liver + Glycogenesis + Glycolysis)
+d/dt(Insulin_Liver)   = (Insulin_PlasmaToLiver + S)                           - (Insulin_LiverToPlasma + InsulinDegradation_Liver)
+d/dt(Glycogen_Liver)  = (Glycogenesis)                                        - (Glycogenolysis)
+d/dt(PEP_Liver)       = (Glycolysis + OAAtoPEP)                               - (Gluconeogenesis + PEPtoPyruvate)
+d/dt(Pyruvate_Liver)  = (AminoAcids_PlasmaToPyruvate_Liver + PEPtoPyruvate)  - (PyruvateOxi_L + PyruvateToOAA)
+d/dt(AcetylCoA_Liver) = (PyruvateOxi_L + LipidsToAcetylCoA_Liver)            - (TCA_start + Ketogenesis_Liver)
+d/dt(Citrate_Liver)   = (TCA_start*2)                                        - (CitrateToTCA_Liver + Lipogenesis_Liver)
+d/dt(TCA_Liver)       = (CitrateToTCA_Liver + AminoAcids_PlasmaToTCA_Liver)   - (TCA_rotation + TCA_out)
+d/dt(OAA_Liver)       = (TCA_rotation + PyruvateToOAA)                        - (TCA_start + OAAtoPEP)
+d/dt(FatPool_Liver)   = (Lipids_PlasmaToLiver + Lipogenesis_Liver + Lipolysis_Liver + Chylomicrons_PlasmaToLiver)    - (LipidsToAcetylCoA_Liver + StoreFat_Liver + Lipids_LiverToPlasma)
+d/dt(TGA_Liver)       = (StoreFat_Liver)                                                                             - (Lipolysis_Liver)
+d/dt(Ketones_Liver)   = (Ketogenesis_Liver)                                                                          - (KetonesLiverToPlasma)
+
+d/dt(Insulin_Pancrease) = (InsulinProduction)           - (S)
+
+d/dt(Glucose_Adipocytes)     = (U_idf)                                                                     - (Glucose_AdipocytesToMalonylCoA_Adipocytes)
+d/dt(MalonylCoA_Adipocytes)  = (Glucose_AdipocytesToMalonylCoA_Adipocytes)                                 - (Lipogenesis_Adipocytes)
+d/dt(FatPool_Adipocytes)     = (Lipids_PlasmaToAdipocytes + Lipolysis_Adipocytes + Lipogenesis_Adipocytes + Chylomicrons_PlasmaToAdipocytes) - (StoreFat_Adipocytes + Lipids_AdipocytessToPlasma)
+d/dt(TGA_Adipocyte)          = (StoreFat_Adipocytes)                                                       - (Lipolysis_Adipocytes)
+
+d/dt(LeanBodyWeight)     = LeanBodyWeightChange
+
+d/dt(InsulinResponseFATP1_Delay)    =  InsulinResponseFATP1_DelayK *(Insulin_Plasma - InsulinResponseFATP1_Delay)
+
+Stomach_Carbohydrates(0)    = 0
+Stomach_Protein(0)          = 0
+Stomach_Lipid(0)            = 0
+Intestines_Carbohydrates(0) = 0
+Intestines_Protein(0)       = 0
+Intestines_Lipid(0)         = 0
+
+Glucose_Plasma(0)   = 0.01
+AminoAcids_Plasma(0)= 0.01
+Lipids_Plasma(0)    = 0.01
+Insulin_Plasma(0)   = 0.01
+Ketones_Plasma(0)   = 0.01
+
+Glucose_Liver(0)    = 1
+Insulin_Liver(0)    = 0.1
+Glycogen_Liver(0)   = 200
+PEP_Liver(0)        = 0.1
+Pyruvate_Liver(0)   = 0.1
+AcetylCoA_Liver(0)  = 0.1
+Citrate_Liver(0)    = 0.1
+TCA_Liver(0)        = 0.1
+OAA_Liver(0)        = 0.1
+FatPool_Liver(0)    = 0.1
+TGA_Liver(0)        = 75
+Ketones_Liver(0)    = 0.01
+
+Insulin_Pancrease(0) = 0
+
+Glucose_Adipocytes(0)    = 0
+MalonylCoA_Adipocytes(0) = 0
+FatPool_Adipocytes(0)    = 0
+TGA_Adipocyte(0)         = 20000   
+
+InsulinResponseFATP1_Delay(0) = 0.01
+
+LeanBodyWeight(0)   = 70
+
+********** MODEL PARAMETERS
+Stomach_CarbohydratesBreakdownK                     =  0.0148413886917010
+Protein_CarbohydratesBreakdownK                     =  0.325102301948536
+Lipid_CarbohydratesBreakdownK                       =  0.00400227753171141
+Carbohydrates_Intestines_outK                       =  0.0150309222929541
+Protein_Intestines_outK                             =  0.0160545842757625
+Lipids_Intestines_outK                              =  0.00444840859509301
+Lipids_AdipocytessToPlasmaK                         =  257.628515985939
+Lipids_LiverToPlasmaK                               =  3.48140115556622
+Lipids_PlasmaToLiverK                               =  28.2916270896593
+Lipids_PlasmaToAdipocytesK                          =  2.24349518818465
+Insulin_PlasmaToLiverK                              =  0.503837230116648
+Insulin_LiverToPlasmaK                              =  0.675578291825683
+EGP_Liverk                                          =  0.342849617585649
+U_ilK                                               =  3.77656099742035
+aaIntoLiverK                                        =  0.0486029545281344
+EGP_KidneysK                                        =  0.00547740890138581
+GlycogenNegativeDependencyEXP1                      =  0.690871501622106
+GlycogenNegativeDependencyEXP2                      =  4.99999781830738
+GlycogenNegativeDependencyK                         =  38.5555048042303
+U_ii                                                =  1.09281685781505e-05
+KetonesUsageK                                       =  1.60347679174537
+AminoAcids_PlasmaOutK                               =  9.71375590335886e-05
+Lipids_PlasmaOutK                                   =  0.000227401206297860
+Chylomicrons_PlasmaToLiverK                    =  0.0468900765601679
+Chylomicrons_PlasmaToAdipocytesK               =  2.44529232800656
+Vm_ii                      =  5.14229511803039
+Vf_ii                      =  1.04314326474886
+Vm_id                      =  0.000679336238059343
+Vf_id                      =  0.00364562250629693
+StoreFat_AdipocytesK                                             =  0.453541492418556
+Lipogenesis_AdipocytesK                                          =  21.0778500000000
+Lipolysis_AdipocytesMax                                          =  0.329518654138755
+Lipolysis_Adipocytes0                                            =  179.297250000000
+Glucose_AdipocytesToMalonylCoA_AdipocytesK                       =  56.8561817327674
+GlycogenesisK                            =  2.51808308789725
+GlycogenolysisK                          =  0.937937659035894
+PyruvateOxi_k                            =  0.0150921599999778
+PEPtoPyruvateK                           =  16.3022698364706
+TCA_startK                               =  19.4034966827018
+TCA_rotationK                            =  0.586680443587918
+OAAtoPEPk                                =  0.449954755227351
+TCA_outK                                 =  0.772548113397138
+PyruvateToOAAk                           =  0.00816409686755121
+CitrateToTCA_LiverK                      =  0.602224643779032
+Aminoprofile_k                           =  0.899997539160148
+Glycolysis_k                             =  0.153669652843164
+GluconeogenesisK                         =  0.128218517642182
+LipidsToAcetylCoA_LiverK                      =  0.0387501792846207
+Lipogenesis_LiverK                            =  0.000562875650728032
+Lipolysis_LiverK                              =  4.07687487022278e-05
+Ketogenesis_LiverK                            =  0.000577064094750877
+KetonesLiverToPlasmaK                         =  0.949873101675597
+StoreFat_LiverK                               =  0.00405714205450392
+InsulinDegradation_PlasmaK                          =  0.653380276685274
+HE_negativeK                                        =  0.0165077343471455
+HE_positiveK                                        =  4.10815218589409
+InsulinStabilisationMagnitude                       =  145.521134418567
+GlucoseBaseline                                     =  4.00007046383596
+InsulinProductionK                                  =  362.991165378496
+InsulinProductionBasal                              =  22.6251664000430
+InsulinResponseFATP1_K                              =  0.0472655021699240
+InsulinResponseFATP1_DelayK                         =  0.0361415071431025
+InsulinResponseLiverK                               =  0.897944966855989
+S_K                                                 =  32.6560500000000
+SumEnergyK                         =  5.95053782405753e-05
+WaterWeightK                       =  0.00996303130685977
+BMRDynamicBW                       =  1.19928164644732
+BMRDynamicGly                      =  0.0451195507023911
+BMRbasal                           =  2425.44102529018
+EnergyExpandature                 =  400.987050655893
+carb_flow                         =  0.179999854769327
+protein_flow                      =  0.109998207075086
+lipids_flow                       =  0.0999998992684958
+female_boolean                            =  0
+male_boolean                              =  1
+Height                                    =  178
+
+********** MODEL VARIABLES
+
+TGA_AdipocyteKg       = TGA_Adipocyte/1000
+LeanBodyWeightKg      = LeanBodyWeight + WaterWeightK*Glycogen_Liver
+BW                    = TGA_AdipocyteKg + LeanBodyWeightKg
+
+VolumeBloodPeripheral = ((0.3669*(Height/100)^3 + 0.03219*BW + 0.6041)*male_boolean + (0.3561*(Height/100)^3 + 0.03308*BW + 0.1833)*female_boolean)
+VolumeBloodLiver      = VolumeBloodPeripheral*0.13
+
+GlycogenConcentrationliver = Glycogen_Liver*1000/(VolumeBloodLiver*666.6)             % mM
+InsulinConcentrationPlasma = Insulin_Plasma/(VolumeBloodPeripheral)                   % Insulin_Plasma = pMolar
+GlucoseConcentrationPlasma = 18*(Glucose_Plasma*1000/(VolumeBloodPeripheral*10))      % mM
+KetoneConcentrationPlasma  = 0.17212*(Ketones_Plasma*1000/(VolumeBloodPeripheral*10)) % mM
+FFAConcentrationPlasma     = Lipids_Plasma*1000/(885.46*VolumeBloodLiver)             % mM, 885.46 g/mol molecular weight from https://digitalcommons.unl.edu/cgi/viewcontent.cgi?article=1212&context=usepapapers
+
+********** MODEL REACTIONS
+
+% Stomach and intestines
+Stomach_CarbohydratesBreakdown = Stomach_CarbohydratesBreakdownK * Stomach_Carbohydrates
+Protein_CarbohydratesBreakdown = Protein_CarbohydratesBreakdownK * Stomach_Protein
+Lipid_CarbohydratesBreakdown   = Lipid_CarbohydratesBreakdownK   * Stomach_Lipid
+
+Carbohydrates_Intestines_out      = Intestines_Carbohydrates * Carbohydrates_Intestines_outK
+Protein_Intestines_out            = Intestines_Protein       * Protein_Intestines_outK
+Lipids_Intestines_out             = Intestines_Lipid         * Lipids_Intestines_outK
+
+% Plasma
+U_il                        = U_ilK * Glucose_Plasma
+EGP_Liver                   = Glucose_Liver * EGP_Liverk
+EGP_Kidneys                 = (EGP_KidneysK * (1+(200/GlycogenConcentrationliver)))^GlycogenNegativeDependencyEXP1
+EGP                         = EGP_Liver + EGP_Kidneys
+KetonesLiverToPlasma        = KetonesLiverToPlasmaK        * Ketones_Liver
+Lipids_AdipocytessToPlasma  = Lipids_AdipocytessToPlasmaK  * FatPool_Adipocytes
+Lipids_PlasmaToLiver        = Lipids_PlasmaToLiverK        * Lipids_Plasma
+Lipids_PlasmaToAdipocytes   = Lipids_PlasmaToAdipocytesK   * Lipids_Plasma
+Lipids_LiverToPlasma        = Lipids_LiverToPlasmaK        * FatPool_Liver
+AminoAcids_PlasmaToPyruvate_Liver = AminoAcids_Plasma      * Aminoprofile_k     * aaIntoLiverK
+AminoAcids_PlasmaToTCA_Liver      = AminoAcids_Plasma      * (1-Aminoprofile_k) * aaIntoLiverK
+AminoAcids_PlasmaOut              = AminoAcids_Plasma      * AminoAcids_PlasmaOutK
+Lipids_PlasmaOut                  = Lipids_Plasma          * Lipids_PlasmaOutK
+Chylomicrons_PlasmaToLiver        = Chylomicrons_PlasmaToLiverK      * Chylomicrons_plasma
+Chylomicrons_PlasmaToAdipocytes   = Chylomicrons_PlasmaToAdipocytesK * Chylomicrons_plasma
+
+% Muscle and fat
+U_idm      = (Vm_ii+(Vm_id*Insulin_Plasma))*Glucose_Plasma
+U_idf      = (Vf_ii+(Vf_id*Insulin_Plasma))*Glucose_Plasma
+U          = U_idm + U_idf
+
+% Insulin
+InsulinResponseFATP1       = 1 + (InsulinResponseFATP1_Delay  * InsulinResponseFATP1_K)
+InsulinResponseLiver       = 1 + (Insulin_Liver  * InsulinResponseLiverK)
+ChangeInGlucose            = max(0,InsulinProductionK * Carbohydrates_Intestines_out)
+InsulinStabilization       = max(0,InsulinStabilisationMagnitude*(GlucoseConcentrationPlasma-GlucoseBaseline))
+InsulinProduction          = ChangeInGlucose + InsulinStabilization + InsulinProductionBasal
+S                          = S_K * Insulin_Pancrease
+Insulin_LiverToPlasma      = Insulin_LiverToPlasmaK * Insulin_Liver
+Insulin_PlasmaToLiver      = Insulin_PlasmaToLiverK * Insulin_Plasma
+InsulinDegradation_Liver   = max(0,(HE_positiveK - (HE_negativeK*S))  * Insulin_Liver)
+InsulinDegradation_Plasma  = InsulinDegradation_PlasmaK * Insulin_Plasma
+
+% Hepatic metabolism
+PyruvateOxi_L        = Pyruvate_Liver      * PyruvateOxi_k
+PEPtoPyruvate        = PEP_Liver           * PEPtoPyruvateK
+TCA_start            = TCA_startK          * (AcetylCoA_Liver * OAA_Liver)
+CitrateToTCA_Liver   = CitrateToTCA_LiverK * Citrate_Liver
+TCA_rotation         = TCA_rotationK       * TCA_Liver
+OAAtoPEP             = OAAtoPEPk           * OAA_Liver
+TCA_out              = TCA_outK            * TCA_Liver
+PyruvateToOAA        = PyruvateToOAAk      * Pyruvate_Liver
+LipidsToAcetylCoA_Liver    = LipidsToAcetylCoA_LiverK * FatPool_Liver  * (1+(GlycogenNegativeDependencyK/GlycogenConcentrationliver)^GlycogenNegativeDependencyEXP2)
+Lipogenesis_Liver          = Lipogenesis_LiverK       * Citrate_Liver
+StoreFat_Liver             = StoreFat_LiverK          * FatPool_Liver * InsulinResponseFATP1
+Lipolysis_Liver            = Lipolysis_LiverK         * TGA_Liver     / InsulinResponseFATP1
+Ketogenesis_Liver          = AcetylCoA_Liver      * Ketogenesis_LiverK 
+Glycogenesis               = GlycogenesisK        * Glucose_Liver * InsulinResponseLiver
+Glycogenolysis             = GlycogenolysisK   * Glycogen_Liver
+Gluconeogenesis            = PEP_Liver            * GluconeogenesisK
+Glycolysis                 = Glycolysis_k         * Glucose_Liver
+
+% Muscle and fat
+Lipolysis_Adipocytes                      = ((Lipolysis_AdipocytesMax* TGA_Adipocyte)/(Lipolysis_Adipocytes0+TGA_Adipocyte))/InsulinResponseFATP1
+KetonesUsage                              = Ketones_Plasma * KetonesUsageK
+StoreFat_Adipocytes                       = StoreFat_AdipocytesK           * FatPool_Adipocytes                             * InsulinResponseFATP1
+Lipogenesis_Adipocytes                    = Lipogenesis_AdipocytesK        * MalonylCoA_Adipocytes
+Glucose_AdipocytesToMalonylCoA_Adipocytes = Glucose_AdipocytesToMalonylCoA_AdipocytesK * Glucose_Adipocytes
+
+EnergyIntake_Body      = (Stomach_CarbohydratesBreakdown*4 + Protein_CarbohydratesBreakdown*4   + Lipid_CarbohydratesBreakdown*9)
+BMR                    = (BMRDynamicBW*LeanBodyWeight)  + (BMRDynamicGly*GlycogenConcentrationliver) + BMRbasal
+EnergyExpandature_Body = (EnergyExpandature + BMR)/1440
+LeanBodyWeightChange   = (EnergyIntake_Body - EnergyExpandature_Body) *SumEnergyK
+
+********** MODEL FUNCTIONS
+********** MODEL EVENTS
+
+********** MODEL MATLAB FUNCTIONS
